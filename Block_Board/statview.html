@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Statistics View</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
+    />
+    <!-- Link Swiper's CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/css/font-style.css" rel="stylesheet">
+    <link href="assets/css/flexslider.css" rel="stylesheet">
+    
+	  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+	  <script type="text/javascript" src="assets/js/lib/d3.v5.min.js"></script>
+    <script type="text/javascript" src="assets/js/lib/d3-tip.min.js"></script>
+	  <script type="text/javascript" src="assets/js/lib/d3/d3.min.js"></script>
+  	<script type="text/javascript" src="assets/js/lib/d3-dsv/d3-dsv.min.js"></script>
+  	<script type="text/javascript" src="assets/js/lib/d3-fetch/d3-fetch.min.js"></script>
+
+
+    <!-- Demo styles -->
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
+
+      html,
+      body {
+        position: relative;
+        height: 100%;
+      }
+
+      body {
+        padding-top: 60px;
+      }
+
+      /*Chain view css start*/
+      .main-unit {		
+			margin-bottom: 30px;
+			padding-bottom: 4px;
+			border: 1px solid #383737;
+			background-image:url('../img/sep-half.png');
+			background-color: #3d3d3d;
+			color:white;
+			height:450px;
+		}
+
+      body {
+        /* background: #eee;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color: #000;
+        margin: 0;
+        padding: 0; */
+
+        /* margin-bottom: 30px;
+        padding-bottom: 4px;
+        border: 1px solid #383737; */
+        /* background-image:url('../img/sep-half.png'); */
+        background-color: #3d3d3d;
+        color:white;
+        height:450px;
+      }
+      .axis { font: 14px sans-serif; }
+
+      #svgtop {
+        background-color: #272727;
+      }
+
+      #svgbottom {
+        background-color: #272727;
+      }
+
+      #submit {
+        background-color: #272727;
+        border: none;
+        border-radius: 0px;
+        padding: 8px;
+        color: white;
+      }
+
+      .swiper {
+        width: 100%;
+        height: 100%;
+        top: 45%;
+        
+      }
+
+      .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: rgb(80, 165, 84);
+        height: 30%;
+        /* transform: translate(0, -30%); */
+        font-family: 'Montserrat', sans-serif;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+
+      /* .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        color:aqua
+      } */
+
+      .swiper-pagination {
+        top: 80%;
+        left: 0;
+        width: 100%;
+        height: 10%;
+        text-align: center;
+      }
+
+      .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        border-radius: 100%;
+        background: rgb(228, 222, 222);
+        margin: 0 2px;
+      }
+
+      #tooltip {
+      position: absolute;
+      z-index: 100;
+      text-align: center;
+      padding: 2px;
+      font: 18px sans-serif;  
+      color: rgb(210, 210, 210);
+      background: rgba(0, 0, 0, 0.65);
+      padding: 8px;
+      border-radius: 6px;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <!-- NAVIGATION MENU -->
+    <div class="navbar-nav navbar-inverse navbar-fixed-top">
+      <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html"><img src="assets/img/logo30.png" alt=""> QBLINX BlockBoard</a>
+      </div> 
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="index.html"><i class="icon-home icon-white"></i> Home</a></li>
+            <li><a href="blockview.html"><i class="icon-folder-open icon-white"></i> Block View</a></li>
+            <li class="active"><a href="statview.html"><i class="icon-folder-open icon-white"></i> Statistic View</a></li>
+
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    
+
+    <!-- Start DataWindow-Rusty -->
+    <div id="data_window" align="center"  >
+        <label>Number of Blocks to Show:</label>
+        <input type="text" id="blockCount" placeholder="Enter number of blocks to visualize" style="width:300px">
+        <input name="Submit" id='submit' type="button" value="Update Chart">
+    </div>
+    <!-- End DataWindow-Rusty -->
+
+
+    <div class="swiper-pagination"></div>
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Initialize Swiper -->
+    <script> 
+    
+      function customSplit(str, maxLength){
+        if(str.length <= maxLength)
+            return str;
+        var reg = new RegExp(".{1," + maxLength + "}","g");
+        var parts = str.match(reg);
+        return parts.join('\n');
+      }
+  
+      function avgarray(arr) {
+        if (!arr.length) {
+          return 0
+        }
+        acc = 0
+        arr.forEach(d => {
+          acc += d
+        })
+        avg = acc/(arr.length)
+        return avg
+      }
+  
+      function sumarray(arr) {
+        if (!arr.length) {
+          return 0
+        }
+        acc = 0
+        arr.forEach(d => {
+          acc += d
+        })
+        return acc
+      }
+  
+      var collected = {}
+      var onchain = null
+      var sentiment = null
+      var financial = null
+  
+      var margin = {top: 30, bottom: 30, left: 50, right: 50},
+            width = window.innerWidth - margin.left - margin.right,
+            height = window.innerHeight - margin.top - margin.bottom;
+
+      d3.dsv(",", "data/onchain.csv", function(d) {
+        // console.log(d);
+        return {
+          dt: new Date(d.dt),
+          hash: d.block_hash,
+          interval: parseFloat(d.block_interval),
+          pending_tx_count: parseFloat(d.pending_tx_count),
+          day_tx_count: parseFloat(d.day_tx_count),
+          avg_tx_per_block: parseFloat(d.avg_tx_per_block),
+          hashrate: parseFloat(d.block_height),
+          block_height: parseFloat(d.hashrate)
+        }
+      }).then(function(odata) {
+          // console.log(odata);
+          var onchain = odata
+          for (i=odata.length-1; i>0; i--) {
+            collected[odata[i].dt] = {
+              start: odata[i].dt, 
+              end: odata[i-1].dt,
+              dt: odata[i].dt,
+              hash: odata[i].hash,
+              interval: odata[i].interval,
+              pending_tx_count: odata[i].pending_tx_count,
+              day_tx_count: odata[i].day_tx_count,
+              avg_tx_per_block: odata[i].avg_tx_per_block,
+              hashrate: odata[i].hashrate,
+              block_height: odata[i].block_height,
+              neg: [],
+              negavg: 0,
+              neu: [],
+              neuavg: 0,
+              pos: [],
+              posavg: 0,
+              compound: [],
+              compoundavg: 0,
+              svolume: [],
+              svolumeavg: 0,
+              open: [],
+              openavg: 0,
+              high: [],
+              highavg: 0,
+              low: [],
+              lowavg: 0,
+              close: [],
+              closeavg: 0,
+              fvolume: [],
+              fvolumeavg: 0,
+              
+            }
+          }
+          // console.log(collected)
+  
+          d3.dsv(",", "data/sentiment.csv", function(d) {
+            // console.log(d);
+            return {
+              dt: new Date(d.dt),
+              neg: parseFloat(d.neg),
+              neu: parseFloat(d.neu),
+              pos: parseFloat(d.pos),
+              compound: parseFloat(d.compound),
+              volume: parseFloat(d.volume)
+            }
+          }).then(function(sdata) {
+            sentiment = sdata
+            // console.log(sdata)
+  
+            for (let k in collected) {
+              st = collected[k].start
+              et = collected[k].end
+              sdata.forEach(s => {
+                if (s.dt >= st && s.dt < et) {
+                  collected[k].neg.push(s.neg);
+                  collected[k].neu.push(s.neu);
+                  collected[k].pos.push(s.pos);
+                  collected[k].compound.push(s.compound);
+                  collected[k].svolume.push(s.volume);
+                }
+              })
+            }
+  
+            var prevk = Object.keys(collected)[0]
+            for (let k in collected) {
+              cmpavg = avgarray(collected[k].compound)
+              prevcompavg = collected[prevk].compoundavg
+              collected[k]['compoundavg'] = (cmpavg ? cmpavg : prevcompavg)
+              posavg = avgarray(collected[k].pos)
+              prevposavg = collected[prevk].posavg
+              collected[k]['posavg'] = (posavg ? posavg : prevposavg)
+              negavg = avgarray(collected[k].neg)
+              prevnegavg = collected[prevk].negavg
+              collected[k]['negavg'] = (negavg ? negavg : prevnegavg)
+              neuavg = avgarray(collected[k].neu)
+              prevneuavg = collected[prevk].neuavg
+              collected[k]['neuavg'] = (neuavg ? neuavg : prevneuavg)
+              svolumeavg = sumarray(collected[k].svolume)
+              prevsvolumenavg = collected[prevk].svolumeavg
+              collected[k]['svolumeavg'] = (svolumeavg ? svolumeavg : prevsvolumenavg)
+  
+              prevk = k
+            }
+            
+            d3.dsv(",", "data/financial.csv", function(d) {
+              // console.log(d);
+              return {
+                dt: new Date(d.dt),
+                open: parseFloat(d.open),
+                high: parseFloat(d.high),
+                low: parseFloat(d.low),
+                close: parseFloat(d.close),
+                volume: parseFloat(d.volume)
+              }
+            }).then(function(fdata) {
+              financial = fdata
+  
+              for (let k in collected) {
+                st = collected[k].start
+                et = collected[k].end
+                fdata.forEach(s => {
+                  if (s.dt >= st && s.dt < et) {
+                    collected[k].open.push(s.open);
+                    collected[k].high.push(s.high);
+                    collected[k].low.push(s.low);
+                    collected[k].close.push(s.close);
+                    collected[k].fvolume.push(s.volume);
+                  }
+                })
+              }
+  
+              var prevk = Object.keys(collected)[0]
+              for (let k in collected) {
+                openavg = avgarray(collected[k].open)
+                prevopenavg = collected[prevk].openavg
+                collected[k]['openavg'] = (openavg ? openavg : prevopenavg)
+                highavg = avgarray(collected[k].high)
+                prevhighavg = collected[prevk].highavg
+                collected[k]['highavg'] = (highavg ? highavg : prevhighavg)
+                lowavg = avgarray(collected[k].low)
+                prevlowavg = collected[prevk].lowavg
+                collected[k]['lowavg'] = (lowavg ? lowavg : prevlowavg)
+                closeavg = avgarray(collected[k].close)
+                prevcloseavg = collected[prevk].closeavg
+                collected[k]['closeavg'] = (closeavg ? closeavg : prevcloseavg)
+                fvolumeavg = sumarray(collected[k].fvolume)
+                prevfvolumeavg = collected[prevk].fvolumeavg
+                collected[k]['fvolumeavg'] = (fvolumeavg ? fvolumeavg : prevfvolumeavg)
+                prevk = k
+              }
+              
+              // console.log(collected)
+              var indexmap = {}
+              var counter = 0
+              for (let k in collected) {
+                indexmap[counter] = k;
+                counter++;
+              }
+              // console.log(indexmap)
+  
+              // vis goes here...
+
+              var tograph = []
+              var total = Object.keys(collected).length
+              var keys = Object.keys(collected)
+              // console.log(keys)
+              var count = 50 // use this in selector to filter graphed data
+              for (i = total-1; i > total - count - 1; i--) {
+                tograph.push(collected[keys[i]])
+              }
+              tograph = tograph.slice(0).reverse()
+              // console.log(tograph)
+
+              var svgtop = d3.select('body').append('svg')
+              .attr('width', width)
+              .attr('height', height*.8)
+              .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+              .attr('id', 'svgtop')
+
+              var svgbottom = d3.select('body').append('svg')
+              .attr('width', width)
+              .attr('height', height/2)
+              .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+              .attr('id', 'svgbottom')
+
+
+              makegraph(tograph, svgtop, svgbottom)
+
+
+
+              // <!-- Start DataWindow-Rusty -->
+              var tempCount;
+
+              d3.select('#submit').on('click', function() {
+                tograph = []
+
+                // update block count if not NaN or 0
+                tempCount = +(document.getElementById("blockCount").value)
+                if (tempCount != 0 && tempCount == tempCount && tempCount <= 200) {
+                  count = tempCount
+                } else if (tempCount != 0 && tempCount == tempCount && tempCount > 200) {
+                  window.confirm('Maximum block visualization is limited to 200 blocks')
+                  count = 200
+                  document.getElementById("blockCount").value = count
+                } else {
+                  window.confirm('Invalid input')
+                  document.getElementById("blockCount").value = count
+                }
+                console.log(count)
+
+                // console.log('updated count of blocks', +count)
+
+                // upgrade tograph list based on new blockCount value
+                for (i = total-1; i > total - count - 1; i--) {
+                  tograph.push(collected[keys[i]])
+                }
+                tograph = tograph.slice(0).reverse()
+                console.log(tograph)
+
+                // remove previous svgtop and svgbottom elements
+                d3.select('#svgtop').remove()
+                d3.select('#svgbottom').remove()
+
+                // recreate svgtop
+                var svgtop = d3.select('body').append('svg')
+                  .attr('width', width)
+                  .attr('height', height*.8)
+                  .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+                  .attr('id', 'svgtop')
+
+                // recreate svgbottom
+                var svgbottom = d3.select('body').append('svg')
+                  .attr('width', width)
+                  .attr('height', height/2)
+                  .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+                  .attr('id', 'svgbottom')
+
+                // redraw full graph
+                makegraph(tograph, svgtop, svgbottom)
+              })
+              // <!-- End DataWindow-Rusty -->
+            
+            });
+  
+          });
+  
+  
+      });
+
+      function makegraph(data, svgtop, svgbottom) {
+
+        // console.log(data)
+        minblockheight = Infinity
+        maxblockheight = -Infinity
+        xdata = []
+        dataxmapped = {}
+
+        minrange = Infinity
+        maxrange = -Infinity
+
+        // rearranged linekeys for closeavg to be at end so that it is on top of all of the lines
+        linekeys = ['avg_tx_per_block', 'compoundavg', 'day_tx_count', 'hashrate', 'highavg', 'interval', 'lowavg', 'negavg', 'neuavg', 'openavg', 'pending_tx_count', 'posavg', 'fvolumeavg', 'svolumeavg', 'closeavg']
+        namesmap = {
+          avg_tx_per_block: 'Average Transactions per Block',
+          closeavg: 'Closing Price',
+          compoundavg: 'Compound Sentiment',
+          day_tx_count: 'Daily Transactions',
+          hashrate: 'Hashrate',
+          highavg: 'High Price',
+          interval: 'Block Interval',
+          lowavg: 'Low Price',
+          negavg: 'Negative Sentiment',
+          neuavg: 'Neutral Sentiment',
+          openavg: 'Opening Price',
+          pending_tx_count: 'Pending Transactions',
+          posavg: 'Positive Sentiment',
+          fvolumeavg: 'Trading Volume', 
+          svolumeavg: 'Sentiment Volume'
+        }
+        barkeys = ['fvolumeavg', 'svolumeavg']
+        scalekeys = {}
+        linekeys.forEach(k => {
+          scalekeys[k] = {minimum: Infinity, maximum: -Infinity, scaled: [], raw: []}
+        })
+        // console.log(scalekeys)
+
+        data.forEach(d => {
+          h = d.block_height
+          xdata.push(h)
+          dataxmapped[h] = d
+          minblockheight = (h < minblockheight ? h : minblockheight)
+          maxblockheight = (h > maxblockheight ? h : maxblockheight)
+          linekeys.forEach(k => {
+            curr = d[k]
+            prevmin = scalekeys[k].minimum
+            prevmax = scalekeys[k].maximum
+            scalekeys[k]['minimum'] = (curr < prevmin ? curr : prevmin)
+            scalekeys[k]['maximum'] = (curr > prevmax ? curr : prevmax)
+          })
+        })
+
+        linekeys.forEach(k => {
+          currmin = scalekeys[k].minimum
+          currmax = scalekeys[k].maximum
+          delta = currmax - currmin
+          scalekeys[k]['delta'] = delta
+        })
+
+        largest_delta = -Infinity
+        largest_delta_key = null
+        // linekeys.forEach(k => {
+        //   if (scalekeys[k]['delta'] > largest_delta) {
+        //     largest_delta = scalekeys[k]['minimum']
+        //     largest_delta_key = k
+        //   }
+        // })
+        largest_delta_key = 'closeavg'
+
+
+        linekeys.forEach(k => {
+          keymin = scalekeys[k].minimum
+          keymax = scalekeys[k].maximum
+          override = 1
+          if (keymax - keymin == 0) {
+            keymin--
+            override = 2
+          }
+          data.forEach(d => {
+            curr = d[k]
+            scalekeys[k]['raw'].push(curr)
+            localscale = (curr - keymin) / (keymax - keymin)
+            scalekeys[k]['scaled'].push((localscale * (scalekeys[largest_delta_key].delta/override)) + scalekeys[largest_delta_key].minimum)
+          })
+        })
+
+        // console.log(minblockheight, maxblockheight)
+        // console.log(scalekeys)
+        // console.log(largest_delta, largest_delta_key)
+        // console.log(dataxmapped)
+
+        var yaxisbound = margin.left*2;
+        var xaxisbound = height*0.8 - margin.bottom*2;
+
+        var xscale = d3.scaleLinear()
+          .domain([minblockheight, maxblockheight])
+          .range([yaxisbound, width-margin.right]);
+
+        var x_axis = svgtop.append('g')
+          .attr('class', 'axis') 
+          .attr('id', 'x-axis-lines')
+          .attr('transform', 'translate(0, ' + xaxisbound + ')')
+          .call(d3.axisBottom(xscale));
+
+        svgtop.append('text').text('Block Height')
+          .style('text-anchor', 'middle')
+          .style('fill', 'white')
+          .attr('transform', 'translate(' + width/2 + ', ' + 435*2*0.8 + ')')
+
+        var yscale = d3.scaleLinear()
+          .domain([scalekeys[largest_delta_key].minimum, scalekeys[largest_delta_key].maximum])
+          .range([xaxisbound, margin.top]);
+
+        var yaxis = d3.axisLeft()
+          .scale(yscale)
+          .ticks(10);
+        
+        var y_axis = svgtop.append('g')
+          .attr('class', 'axis')
+          .attr('id', 'y-axis-lines')
+          .attr('transform', 'translate(' + yaxisbound + ', 0)')
+          .call(yaxis);
+
+        svgtop.append('text').text('Closing  Price')
+          .style('text-anchor', 'middle')
+          .style('fill', 'white')
+          .attr('transform', 'rotate(-90)')
+          .attr('x', -220*2*0.8)
+          .attr('y', 25)
+
+        var linearea = svgtop.append('g').attr('id', 'lines');
+        var legend = svgbottom.append('g').attr('id', 'legend');
+        var dotarea = svgtop.append('g').attr('id', 'dots');
+
+        // linekeys = ['closeavg']
+        ox = 180
+
+        legend.append('text').text('Visualization (On/Off)')
+          .style('fill', 'white').style("font-weight", 'bold')
+          .attr('transform', 'translate(' + 20 + ', ' + margin.top + ')')
+
+        legend.append('rect')
+          .attr("width", 170)
+          .attr("height", 15*25+10)
+          .attr("x", 15)
+          .attr("y", margin.top+15)
+          .attr("fill",  'transparent')
+          .attr('stroke', 'white')
+          .attr('stroke-width', '1')
+        
+        legend.append('text').text('Feature Name')
+          .style('fill', 'white').style("font-weight", 'bold')
+          .attr('transform', 'translate(' + (ox+30) + ', ' + margin.top + ')')
+
+        legend.append('rect')
+          .attr("width", 260)
+          .attr("height", 15*25+10)
+          .attr("x", ox+5)
+          .attr("y", margin.top+15)
+          .attr("fill",  'transparent')
+          .attr('stroke', 'white')
+          .attr('stroke-width', '1')
+
+        legend.append('text').text('Correlation to Close Price')
+          .style('fill', 'white').style("font-weight", 'bold')
+          .attr('transform', 'translate(' + (ox+280) + ', ' + margin.top + ')')
+          .attr('id', 'corr_to_close')
+
+        legend.append('rect')
+          .attr("width", 220)
+          .attr("height", 15*25+10)
+          .attr("x", ox+265)
+          .attr("y", margin.top+15)
+          .attr("fill",  'transparent')
+          .attr('stroke', 'white')
+          .attr('stroke-width', '1')
+
+        legend.append('text').text('Selected Block')
+          .style('fill', 'white').style("font-weight", 'bold')
+          .attr('transform', 'translate(' + (ox+500) + ', ' + margin.top + ')')
+
+        legend.append('rect')
+          .attr("width", 200)
+          .attr("height", 15*25+10)
+          .attr("x", ox+485)
+          .attr("y", margin.top+15)
+          .attr("fill",  'transparent')
+          .attr('stroke', 'white')
+          .attr('stroke-width', '1')
+
+        legend.append('text').text('Selected Block Values in Feature Range')
+          .style('fill', 'white').style("font-weight", 'bold')
+          .attr('transform', 'translate(' + (ox+700) + ', ' + margin.top + ')')
+          .attr('id', 'feature_range')
+ 
+        legend.append('rect')
+          .attr("width", 330)
+          .attr("height", 15*25+10)
+          .attr("x", ox+685)
+          .attr("y", margin.top+15)
+          .attr("fill",  'transparent')
+          .attr('stroke', 'white')
+          .attr('stroke-width', '1')
+
+        var colorlist = d3.schemeSet1.slice(0,8).concat(d3.schemePaired[0]).concat(d3.schemeDark2[5]).concat(d3.schemeAccent[1]).concat(d3.schemeAccent[5]).concat(d3.schemeAccent[7]).concat(d3.schemeSet3[0]).concat(d3.schemePastel1[8])
+        colorlist = colorlist.slice(0,5).concat(colorlist.slice(6, 16)).concat([colorlist[5]])
+        var colorScheme = d3.scaleOrdinal().domain(linekeys).range(colorlist);
+        // var colorScheme = d3.scaleOrdinal().domain(linekeys).range(d3.schemeCategory10);
+        colorcounter = 0
+        linekeys.forEach(k => {
+          currlinedata = scalekeys[k]['scaled']
+          combined = []
+          for (i=0; i<xdata.length; i++){
+            combined.push([xscale(xdata[i]), yscale(currlinedata[i]), xdata[i]])
+          }
+
+          lineid = k + '-line'
+          nameid = k + '-name'
+          circleid = k + '-circle'
+          corrid = k + '-corr'
+          datatextid = k + '-datatext'
+          button = k + '-button-on'
+          dotid = k + '-dot-'
+          dotareaid = k + '-dots'
+          barid = k + '-bar'
+
+          currcolor = colorScheme(colorcounter)
+
+          linearea.append('path')
+            .datum(combined) 
+            .style('stroke', function() {
+              return currcolor
+            })
+            .attr('stroke-width', function() {
+              if (k == 'closeavg') {return 2.75}
+              else {return 1.5}
+            })
+            .style('fill', 'none')
+            .attr('class', 'line') 
+            .attr('id', lineid)
+            .attr('d', d3.line())
+            .on('mouseover', function(){ 
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).attr('stroke-width', 3);
+              d3.select(`#${n}-circle`).attr('r', 10)
+              d3.select(`#${n}-name`).style("font-weight", 'bold')
+              d3.select(`#${n}-corr`).style("font-weight", 'bold')
+              d3.select(`#${n}-datatext`).style("font-weight", 'bold')
+
+            })
+            .on('mouseout', function(){
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).attr('stroke-width', function() {
+                if (d3.select(this).attr('id') == 'closeavg-line') {
+                  return 2.75
+                } else {
+                  return 1.5
+                }
+              });
+              d3.select(`#${n}-circle`).attr('r', 5)
+              d3.select(`#${n}-name`).style("font-weight", '')
+              d3.select(`#${n}-corr`).style("font-weight", '')
+              d3.select(`#${n}-datatext`).style("font-weight", '')
+
+            });
+
+          dotarea.append('g').attr('id', dotareaid)
+            .selectAll('dot')
+            .data(combined)
+            .enter()
+            .append('circle')
+              .attr('cx', function (d) { return d[0]; } )
+              .attr('cy', function (d) { return d[1]; } )
+              .attr('r', 3)
+              .attr('id', function (d) { return dotid + d[2]; })
+              .style('fill', currcolor)
+              .on('mouseover', function(){ 
+                d3.select(this).attr('r', 5);
+                n = d3.select(this).attr('id').split('-')
+                attr = n[0]
+                // console.log(attr, n)
+                fetchandset(dataxmapped, n[2], legend, linekeys, scalekeys) 
+                d3.select(`#${attr}-line`).attr('stroke-width', 3)
+                d3.select(`#${attr}-name`).style("font-weight", 'bold')
+                d3.select(`#${attr}-corr`).style("font-weight", 'bold')
+                d3.select(`#${attr}-datatext`).style("font-weight", 'bold').style("fill", 'green')
+                d3.select(`#${attr}-circle`).attr('r', 10)
+              })
+              .on('mouseout', function(){ 
+                d3.select(this).attr('r', 3);
+                n = d3.select(this).attr('id').split('-')
+                attr = n[0]
+                d3.select(`#${attr}-line`).attr('stroke-width', 1.5)
+                d3.select(`#${attr}-name`).style("font-weight", '')
+                d3.select(`#${attr}-corr`).style("font-weight", '')
+                d3.select(`#${attr}-datatext`).style("font-weight", '').style("fill", 'white')
+                d3.select(`#${attr}-circle`).attr('r', 5)
+              });
+
+          cy = colorcounter * 25 + 60
+          legend.append('circle')
+            .attr('cx', ox + 20 )
+            .attr('cy', cy )
+            .attr('r', 5)
+            .attr('id', circleid)
+            .style('fill', currcolor)
+            .on('mouseover', function(){ 
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).attr('r', 10);
+              d3.select(`#${n}-line`).attr('stroke-width', 3)
+              d3.select(`#${n}-name`).style("font-weight", 'bold')
+              d3.select(`#${n}-corr`).style("font-weight", 'bold')
+              d3.select(`#${n}-datatext`).style("font-weight", 'bold')
+
+            })
+            .on('mouseout', function(){
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).attr('r', 5);
+              d3.select(`#${n}-line`).attr('stroke-width', 1.5)
+              d3.select(`#${n}-name`).style("font-weight", '')
+              d3.select(`#${n}-corr`).style("font-weight", '')
+              d3.select(`#${n}-datatext`).style("font-weight", '')
+
+            });
+
+          legend.append('text').text(namesmap[k])
+            .attr('x', ox + 30 )
+            .attr('y', cy )
+            .attr('id', nameid)
+            .attr('alignment-baseline', 'central')
+            .style('fill', 'white')
+            .on('mouseover', function(){ 
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).style("font-weight", 'bold');
+              d3.select(`#${n}-line`).attr('stroke-width', 3)
+              d3.select(`#${n}-circle`).attr('r', 10)
+              d3.select(`#${n}-corr`).style("font-weight", 'bold')
+              d3.select(`#${n}-datatext`).style("font-weight", 'bold')
+
+            })
+            .on('mouseout', function(){
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).style("font-weight", '');
+              d3.select(`#${n}-line`).attr('stroke-width', 1.5)
+              d3.select(`#${n}-circle`).attr('r', 5)
+              d3.select(`#${n}-corr`).style("font-weight", '')
+              d3.select(`#${n}-datatext`).style("font-weight", '')
+
+            });
+
+          corelation_text = 'Correlation: ' + find_correlation(dataxmapped, largest_delta_key, k)
+          legend.append('text').text(corelation_text)
+            .attr('x', ox + 280 )
+            .attr('y', cy )
+            .attr('id', corrid)
+            .attr('alignment-baseline', 'central')
+            .style('fill', 'white')
+            .on('mouseover', function(){ 
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).style("font-weight", 'bold');
+              d3.select(`#${n}-line`).attr('stroke-width', 3)
+              d3.select(`#${n}-circle`).attr('r', 10)
+              d3.select(`#${n}-name`).style("font-weight", 'bold')
+              d3.select(`#${n}-datatext`).style("font-weight", 'bold')
+
+            })
+            .on('mouseout', function(){
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).style("font-weight", '');
+              d3.select(`#${n}-line`).attr('stroke-width', 1.5)
+              d3.select(`#${n}-circle`).attr('r', 5)
+              d3.select(`#${n}-name`).style("font-weight", '')
+              d3.select(`#${n}-datatext`).style("font-weight", '')
+
+            });
+
+          data_text = '-------------------'
+          legend.append('text').text(data_text)
+            .attr('x', ox + 500 )
+            .attr('y', cy )
+            .attr('id', datatextid)
+            .attr('alignment-baseline', 'central')
+            .style('fill', 'white')
+            .on('mouseover', function(){ 
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).style("font-weight", 'bold');
+              d3.select(`#${n}-line`).attr('stroke-width', 3)
+              d3.select(`#${n}-circle`).attr('r', 10)
+              d3.select(`#${n}-name`).style("font-weight", 'bold')
+              d3.select(`#${n}-corr`).style("font-weight", 'bold')
+
+            })
+            .on('mouseout', function(){
+              n = d3.select(this).attr('id').split('-')[0]
+              d3.select(this).style("font-weight", '');
+              d3.select(`#${n}-line`).attr('stroke-width', 1.5)
+              d3.select(`#${n}-circle`).attr('r', 5)
+              d3.select(`#${n}-name`).style("font-weight", '')
+              d3.select(`#${n}-corr`).style("font-weight", '')
+
+            });
+
+          legend.append('text').text("Visualized: ")
+            .attr('x', 20 )
+            .attr('y', cy )
+            .attr('alignment-baseline', 'central')
+            .style('fill', 'white')
+
+          legend.append('rect')
+            .attr("width", 20)
+            .attr("height", 18)
+            .attr("x", 110)
+            .attr("y", cy-10)
+            .attr("fill",  'green')
+            .attr('stroke', 'white')
+            .attr('stroke-width', '2')
+            .attr('id', button)
+            .on('click', function() {
+              n = d3.select(this).attr('id').split('-')
+              toggleattribute(n[0], n[2])
+            })
+
+          maxbarwidth = 320
+          barwidth = ((scalekeys[k]['maximum'] - scalekeys[k]['minimum']) / scalekeys[k]['delta']) * maxbarwidth
+          legend.append('rect')
+            .attr("width", 0)
+            .attr("height", 18)
+            .attr("x", 870)
+            .attr("y", cy-10)
+            .attr("fill", currcolor)
+            .attr('stroke', 'white')
+            .attr('stroke-width', '0')
+            .attr('id', barid)
+
+          colorcounter++;
+          add_tooltip()
+
+          // initial view shows only 3 lines, closeavg, compoundavg, avg_tx_per_block
+          if (k != 'closeavg' && k != 'compoundavg' && k != 'avg_tx_per_block') {
+            d3.select(`#${k}-button-on`).attr("fill",  'red').attr('id', `${k}-button-off`)
+            d3.select(`#${lineid}`).transition().duration(900).style("visibility", 'hidden')
+            d3.select(`#${circleid}`).transition().duration(900).style("visibility", 'hidden')
+            d3.select(`#${corrid}`).transition().duration(900).style("visibility", 'hidden')
+            d3.select(`#${datatextid}`).transition().duration(900).style("visibility", 'hidden')
+            d3.select(`#${dotareaid}`).transition().duration(900).style("visibility", 'hidden')
+            d3.select(`#${barid}`).transition().duration(900).style("visibility", 'hidden')
+          }
+
+        })
+      } 
+
+      function fetchandset(data, val, legend, keys, scalekeys) {
+        selected = data[val]
+        linekeys.forEach(k => {
+          n = k + '-datatext'
+          legend.select(`#${n}`).text(selected[k])
+          updatebar(selected, k, scalekeys)
+        })
+      }
+
+      function toggleattribute(n, state) {
+        lineid = n + '-line'
+        circleid = n + '-circle'
+        corrid = n + '-corr'
+        datatextid = n + '-datatext'
+        dotareaid = n + '-dots'
+        barid = n + '-bar'
+        if (state == 'on') {
+          d3.select(`#${n}-button-${state}`).attr("fill",  'red').attr('id', `${n}-button-off`)
+          d3.select(`#${lineid}`).transition().duration(900).style("visibility", 'hidden')
+          d3.select(`#${circleid}`).transition().duration(900).style("visibility", 'hidden')
+          d3.select(`#${corrid}`).transition().duration(900).style("visibility", 'hidden')
+          d3.select(`#${datatextid}`).transition().duration(900).style("visibility", 'hidden')
+          d3.select(`#${dotareaid}`).transition().duration(900).style("visibility", 'hidden')
+          d3.select(`#${barid}`).transition().duration(900).style("visibility", 'hidden')
+        } else {
+          d3.select(`#${n}-button-${state}`).attr("fill",  'green').attr('id', `${n}-button-on`)
+          d3.select(`#${lineid}`).transition().duration(900).style("visibility", 'visible')
+          d3.select(`#${circleid}`).transition().duration(900).style("visibility", 'visible')
+          d3.select(`#${corrid}`).transition().duration(900).style("visibility", 'visible')
+          d3.select(`#${datatextid}`).transition().duration(900).style("visibility", 'visible')
+          d3.select(`#${dotareaid}`).transition().duration(900).style("visibility", 'visible')
+          d3.select(`#${barid}`).transition().duration(900).style("visibility", 'visible')
+        }
+      }
+
+      function find_correlation(data, pk, sk) {
+        sumpk = 0
+        sumsk = 0
+        total = 0
+        for (const [key, value] of Object.entries(data)) {
+          // console.log(key, value);
+          sumpk = sumpk + value[pk]
+          sumsk = sumsk + value[sk]
+          total = total + 1
+        }
+        meanpk = sumpk / total
+        meansk = sumsk / total
+        // console.log(pk, sk)
+        // console.log(meanpk, meansk)
+        topaccumulator = 0
+        bottomaccumulatorpk = 0
+        bottomaccumulatorsk = 0
+        for (const [key, value] of Object.entries(data)) {
+          // console.log(key, value);
+          pki = value[pk]
+          ski = value[sk]
+          topaccumulator = topaccumulator + ((pki - meanpk) * (ski - meansk))
+          bottomaccumulatorpk = bottomaccumulatorpk + ((pki - meanpk) * (pki - meanpk))
+          bottomaccumulatorsk = bottomaccumulatorsk + ((ski - meansk) * (ski - meansk))
+
+        }
+        // console.log(topaccumulator, bottomaccumulatorpk, bottomaccumulatorsk)
+        if (topaccumulator == 0) {return 0.00}
+        result = topaccumulator / Math.sqrt(bottomaccumulatorpk * bottomaccumulatorsk)
+        result = result.toFixed(3)
+        return result
+      }
+
+      function updatebar(data, val, scalekeys) {
+        cv = selected[val]
+        maxbarwidth = 320
+        barwidth = ((cv - scalekeys[val]['minimum']) / scalekeys[val]['delta']) * maxbarwidth
+        d3.select(`#${val}-bar`).attr("width", barwidth)
+      }
+  
+      function add_tooltip(){
+        var tooltip = d3.select("html")
+            .append("div")
+            .attr("id", "tooltip")
+            .style("visibility", "hidden");
+
+        d3.select('#corr_to_close')
+            .on("mouseover", function() {
+                tooltip.text("score from -1 to 1 representing correlation between feature and closing price")
+                .style("visibility", "visible");
+            })
+            .on("mousemove", function() {
+                tooltip.style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px")
+            })
+            .on("mouseout", function() {
+                tooltip.style("visibility", "hidden");
+            });
+
+        d3.select('#feature_range')
+            .on("mouseover", function() {
+                tooltip.text("proportion of feature value in relation to its possible minimum and maximum value over the maximum span of blocks")
+                .style("visibility", "visible");
+            })
+            .on("mousemove", function() {
+                tooltip.style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px")
+            })
+            .on("mouseout", function() {
+                tooltip.style("visibility", "hidden");
+            });
+      }
+      </script>
+  </body>
+</html>

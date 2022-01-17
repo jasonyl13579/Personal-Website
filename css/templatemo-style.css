@@ -414,15 +414,15 @@ header {
 }
 
 .Modern-Slider .item-1 .image {
-  background-image: url(../img/slide_1.jpg);
+  background-image: url(../img/slide_3_1.jpg);
 }
 
 .Modern-Slider .item-2 .image {
-  background-image: url(../img/slide_2.jpg);
+  background-image: url(../img/slide_2_2.jpg);
 }
 
 .Modern-Slider .item-3 .image {
-  background-image: url(../img/slide_3.jpg);
+  background-image: url(../img/slide_1_1.jpg);
 }
 
 .Modern-Slider .PrevArrow:before{content:'\f104';}
@@ -591,7 +591,142 @@ header {
   margin-bottom: 12.5px;
 }
 
+/* Featured Style */
 
+#education {
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-bottom: 80px;
+  border-bottom: 1px solid #eee;
+}
+
+#education .section-heading {
+  margin-right: 20%;
+}
+
+#education .content-section {
+  display: inline-block;
+  position: relative;
+}
+
+#education .owl-dots {
+  margin-top: 40px;
+}
+
+#education .owl-dots .owl-dot span  {
+  width: 12px;
+  height: 12px;
+  background-color: #cdcdcd!important;
+  display: inline-block;
+  border-radius: 50%;
+  margin: 0 3px;
+}
+
+#education .owl-dots .active span {
+  background-color: #45489a!important;
+}
+
+#education .owl-dots button {
+  outline: none;
+}
+
+#education .owl-nav {
+  position: absolute;
+  display: inline-block;
+  top: -110px;
+  right: 0;
+}
+
+#education .owl-nav button:focus {
+  outline: none;
+}
+
+#education .owl-nav .owl-prev span {
+  margin-right: 10px;
+}
+
+#education .owl-nav .owl-next span, #education .owl-nav .owl-prev span {
+  outline: none;
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  text-align: center;
+  line-height: 42px;
+  background-color: #eee;
+  color: #232323;
+  font-size: 42px;
+  transition: all 0.5s;
+}
+
+#education .owl-nav span:hover {
+  background-color: #45489a;
+  color: #fff;
+}
+
+#education .item {
+  text-align: left;
+  position: relative;
+  z-index: 10;
+}
+
+#education .item .image {
+  position: relative;
+}
+
+#education .item .image img {
+  width: 100%;
+  overflow: hidden;
+}
+
+#education .item .image .featured-button a {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  text-transform: capitalize;
+  background-color: rgba(69,72,154, 0.9);
+  display: inline-block;
+  height: 44px;
+  line-height: 44px;
+  width: 100%;
+  letter-spacing: 0.25px;
+  text-decoration: none;
+  transition: all 0.5s;
+  position: absolute;
+  z-index: 9;
+  bottom: -44px;
+  opacity: 0;
+}
+
+#education .item:hover .featured-button a {
+  bottom: 0;
+  opacity: 1;
+}
+
+#education .item .text-content {
+  padding-top: 20px;
+  background-color: #fff;
+  position: relative;
+  z-index: 10;
+}
+
+#education .item .text-content h4 {
+  margin-top: 0px;
+  margin-bottom: 5px;
+  font-size: 21px;
+  font-weight: 600;
+  color: #232323;
+  letter-spacing: 0.5px;
+}
+
+#education .item .text-content span {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #7a7a7a;
+  letter-spacing: 0.5px;
+  margin-bottom: 12.5px;
+}
 
 /* Projects Style */
 
@@ -798,6 +933,7 @@ header {
   margin-bottom: 10px;
   padding-bottom: 20px;
   border-bottom: 1px solid #ddd;
+  width: 100%;
 }
 
 #blog .tabgroup ul li:last-child {
@@ -981,6 +1117,7 @@ header {
     padding: 0px 30px;
   }
 
+
   .Modern-Slider .NextArrow{
     outline: none;
     display: none;
@@ -1039,7 +1176,17 @@ header {
     top: -220px;
     right: 0;
   }
+  #education {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 
+  #education .owl-nav {
+    position: absolute;
+    display: inline-block;
+    top: -220px;
+    right: 0;
+  }
   #projects {
     padding-left: 15px;
     padding-right: 15px;
