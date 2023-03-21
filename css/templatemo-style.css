@@ -477,6 +477,16 @@ header {
   z-index: 10;
 }
 
+#aboutme .item span{
+  color:red;
+  font-weight: bold;
+}
+
+#aboutme .item em{
+  
+  font-weight: bold;
+}
+
 #aboutme .item .image {
   position: relative;
 }
@@ -1233,6 +1243,51 @@ header {
   text-decoration: none;
   color: #fff;
   font-weight: 600;
+}
+
+/* nft drop Style */
+
+#nft {
+  padding-top: 0px;
+}
+
+#nft .section-heading{
+  padding-left: 60px;
+}
+#nft-content {
+  padding: 80px 60px;
+}
+
+#nft input {
+  border-radius: 0px;
+  padding-left: 15px;
+  font-size: 13px;
+  color: #aaa;
+  background-color: #f4f4f4;
+  border: 1px solid #eee;
+  outline: none;
+  box-shadow: none;
+  line-height: 40px;
+  height: 40px;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+#nft textarea {
+  border-radius: 0px;
+  padding-left: 15px;
+  padding-top: 10px;
+  font-size: 13px;
+  color: #aaa;
+  background-color: #f4f4f4;
+  border: 1px solid #eee;
+  outline: none;
+  box-shadow: none;
+  height: 200px;
+  max-height: 250px;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 25px;
 }
 
 
